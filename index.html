@@ -1,15 +1,78 @@
 <!DOCTYPE html>
 <html>
-<body style="background:black; color:lime; font-family:monospace;">
+<head>
+<meta charset="UTF-8">
+<title>UNKNOWN SIGNAL</title>
 
-<h1>🔥 PSY PARTY 🔥</h1>
+<style>
+body {
+    background: black;
+    color: red;
+    font-family: monospace;
+    text-align: center;
+    overflow: hidden;
+}
 
-<marquee>🔥 NEXT EVENT COMING 🔥</marquee>
+h1 {
+    font-size: 50px;
+    animation: flicker 0.1s infinite;
+}
 
-<p><b>Datum:</b> 12.4.</p>
-<p><b>Místo:</b> tajný les 🌲</p>
+@keyframes flicker {
+    0% {opacity: 1;}
+    50% {opacity: 0.2;}
+    100% {opacity: 1;}
+}
 
-<p>Lokace bude zveřejněna v den akce.</p>
+.glitch {
+    color: lime;
+    font-size: 20px;
+    animation: glitch 0.2s infinite;
+}
+
+@keyframes glitch {
+    0% {transform: translate(0px);}
+    25% {transform: translate(2px, -2px);}
+    50% {transform: translate(-2px, 2px);}
+    75% {transform: translate(2px, 2px);}
+    100% {transform: translate(0px);}
+}
+
+.hidden {
+    display: none;
+}
+</style>
+</head>
+
+<body>
+
+<h1>⚠ SIGNAL DETECTED ⚠</h1>
+
+<p class="glitch">you were not supposed to be here</p>
+
+<p>datum: ??</p>
+<p>lokace: classified</p>
+
+<br><br>
+
+<button onclick="reveal()">ENTER</button>
+
+<div id="secret" class="hidden">
+    <p>🌲 koordináty budou zveřejněny v den události 🌲</p>
+    <p>bring sound. bring people.</p>
+</div>
+
+<script>
+function reveal() {
+    document.getElementById("secret").style.display = "block";
+}
+</script>
 
 </body>
 </html>
+<audio autoplay loop>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
+</audio>
+<marquee>NO RULES • NO SYSTEM • ONLY SOUND</marquee>
+<p>accessing network...</p>
+<p>decrypting signal...</p>

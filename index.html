@@ -45,6 +45,18 @@ h1 {
 </head>
 
 <body>
+    <h2>🏚️ GHOST TOWN //</h2>
+
+<p>klikni na objekty</p>
+
+<div>
+    <button onclick="house()">🏚️ HOUSE</button>
+    <button onclick="forest()">🌲 FOREST</button>
+    <button onclick="radio()">📻 RADIO</button>
+    <button onclick="grill()">🔥 GRILL</button>
+</div>
+
+<p id="gameOutput"></p>
     <audio autoplay loop>
   <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_c8c8f1f6e3.mp3">
 </audio>
@@ -73,6 +85,33 @@ h1 {
 </div>
 
 <script>
+    function house() {
+    document.getElementById("gameOutput").innerText = "empty... but something moved";
+}
+
+function forest() {
+    document.getElementById("gameOutput").innerText = "you hear distant bass in the trees 🌲";
+}
+
+function radio() {
+    document.getElementById("gameOutput").innerText = "/// SIGNAL FOUND /// 12.4 ///";
+}
+
+function grill() {
+    document.getElementById("gameOutput").innerText = "overheating...";
+
+    document.body.style.transition = "0.1s";
+    
+    setTimeout(() => {
+        document.body.style.background = "red";
+        document.getElementById("gameOutput").innerText = "💥 BOOM 💥";
+    }, 1000);
+
+    setTimeout(() => {
+        document.body.style.background = "black";
+        document.getElementById("gameOutput").innerText = "silence...";
+    }, 2000);
+}
 function reveal() {
     document.getElementById("secret").style.display = "block";
 }

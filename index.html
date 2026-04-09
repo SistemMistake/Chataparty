@@ -64,7 +64,6 @@ h1 {
 
 <div id="secret" class="hidden">
     <p>🌲 koordináty aktivovány 🌲</p>
-
     <p>
         <a href="https://maps.google.com/?q=50.4813643,14.3957695" target="_blank" style="color:red;">
             ACCESS POINT: (50.4813643, 14.3957695)
@@ -93,16 +92,16 @@ h1 {
 
 <script>
 
-// 🧠 JEDNOTNÉ DATUM (DD/MM/YYYY)
-const partyDate = "25/04/2026";
+// 🧠 JEDNOTNÉ DATUM
+const partyDate = "12/04/2026";
 
-// 🔄 převod pro API
+// 🔄 převod formátu
 function parseDate(dateStr) {
     const [day, month, year] = dateStr.split("/");
     return `${year}-${month}-${day}`;
 }
 
-// 📅 zobraz datum na stránce
+// zobraz datum
 document.getElementById("partyDateText").innerText = "datum: " + partyDate;
 
 
@@ -141,66 +140,75 @@ function grill() {
 }
 
 
-// 🐸 BARČA
+// 🐸 BARČA PRO
 async function getWeather() {
     const lat = 50.4813643;
     const lon = 14.3957695;
 
     const apiDate = parseDate(partyDate);
 
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,precipitation_sum&timezone=auto`;
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,windspeed_10m_max,weathercode&timezone=auto`;
 
     const res = await fetch(url);
     const data = await res.json();
 
     const dates = data.daily.time;
-    const temps = data.daily.temperature_2m_max;
+    const tMax = data.daily.temperature_2m_max;
+    const tMin = data.daily.temperature_2m_min;
     const rain = data.daily.precipitation_sum;
+    const wind = data.daily.windspeed_10m_max;
+    const code = data.daily.weathercode;
 
     const index = dates.indexOf(apiDate);
 
     if (index === -1) {
-        document.getElementById("weatherText").innerText = "Barča: nevidím tak daleko 👁";
+        document.getElementById("weatherText").innerText = "Barča: signál nedosáhne tak daleko 👁";
         return;
     }
 
-    const temp = temps[index];
+    const tempMax = tMax[index];
+    const tempMin = tMin[index];
     const rainAmount = rain[index];
+    const windSpeed = wind[index];
+    const weatherCode = code[index];
 
-    let text = "";
+    function getWeatherType(code) {
+        if (code === 0) return "jasno";
+        if (code <= 3) return "polojasno / zataženo";
+        if (code <= 48) return "mlha";
+        if (code <= 67) return "déšť";
+        if (code <= 77) return "sníh";
+        if (code <= 99) return "bouřka";
+        return "chaos";
+    }
+
+    const weatherType = getWeatherType(weatherCode);
+
+    let vibe = "";
 
     if (rainAmount > 5) {
-        const hlasky = [
-            "Barča: bude chcát jak hovado 🌧️",
-            "Barča: déšť incoming, vem pláštěnku",
-            "Barča: mokrá párty, ale pořád párty 😈"
-        ];
-        text = hlasky[Math.floor(Math.random() * hlasky.length)];
-    } 
-    else if (temp > 25) {
-        const hlasky = [
-            "Barča: vedro jak prase, jdi ve spodkách 🩳",
-            "Barča: budeš se tavit 🔥",
-            "Barča: ideální na nahotu 😄"
-        ];
-        text = hlasky[Math.floor(Math.random() * hlasky.length)];
-    } 
-    else if (temp < 10) {
-        const hlasky = [
-            "Barča: klendra, vem si bundu 🧥",
-            "Barča: bude kosa, ale dá se to",
-            "Barča: zahřeje tě jen bass 🔊"
-        ];
-        text = hlasky[Math.floor(Math.random() * hlasky.length)];
-    } 
-    else {
-        const hlasky = [
-            "Barča: ideální rave počasí 🌲",
-            "Barča: tohle je ono",
-            "Barča: vesmír přeje akci 😈"
-        ];
-        text = hlasky[Math.floor(Math.random() * hlasky.length)];
+        vibe = "bude to mokrý... ale to tě nezastaví";
+    } else if (tempMax > 25) {
+        vibe = "vzduch se bude vařit... stejně jako lidi";
+    } else if (tempMax < 10) {
+        vibe = "zima se ti dostane pod kůži";
+    } else if (windSpeed > 20) {
+        vibe = "vítr roznese zvuk daleko";
+    } else {
+        vibe = "podmínky jsou... ideální";
     }
+
+    const text = `
+Barča hlásí:
+
+📅 ${partyDate}
+🌡 ${tempMin}°C → ${tempMax}°C
+🌧 srážky: ${rainAmount} mm
+🌬 vítr: ${windSpeed} km/h
+☁ stav: ${weatherType}
+
+${vibe} 😈
+`;
 
     document.getElementById("weatherText").innerText = text;
 }

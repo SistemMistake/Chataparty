@@ -10,7 +10,6 @@ body {
     color: red;
     font-family: monospace;
     text-align: center;
-    overflow: hidden;
 }
 
 h1 {
@@ -45,9 +44,37 @@ h1 {
 </head>
 
 <body>
-    <h2>🏚️ GHOST TOWN //</h2>
 
-<p>klikni na objekty</p>
+<audio id="audio" loop>
+  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_c8c8f1f6e3.mp3">
+</audio>
+
+<marquee>NO RULES • NO SYSTEM • ONLY SOUND</marquee>
+<p>accessing network...</p>
+<p>decrypting signal...</p>
+
+<h1>⚠ SIGNAL DETECTED ⚠</h1>
+
+<p class="glitch">you were not supposed to be here</p>
+
+<p id="partyDateText"></p>
+<p>lokace: classified</p>
+
+<button onclick="reveal()">ENTER</button>
+
+<div id="secret" class="hidden">
+    <p>🌲 koordináty aktivovány 🌲</p>
+
+    <p>
+        <a href="https://maps.google.com/?q=50.4813643,14.3957695" target="_blank" style="color:red;">
+            ACCESS POINT: (50.4813643, 14.3957695)
+        </a>
+    </p>
+</div>
+
+<hr>
+
+<h2>🏚️ GHOST TOWN //</h2>
 
 <div>
     <button onclick="house()">🏚️ HOUSE</button>
@@ -57,35 +84,36 @@ h1 {
 </div>
 
 <p id="gameOutput"></p>
-    <audio autoplay loop>
-  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_c8c8f1f6e3.mp3">
-</audio>
 
-<h1>⚠ SIGNAL DETECTED ⚠</h1>
+<hr>
 
-<p class="glitch">you were not supposed to be here</p>
-
-<p>datum: ??</p>
-<p>lokace: classified</p>
-
-<br><br>
-
-<button onclick="reveal()">ENTER</button>
-
-<div id="secret" class="hidden">
-    <p>🌲 koordináty aktivovány 🌲</p>
-
-    <p>
-    <a href="https://maps.google.com/?q=50.4813643,14.3957695" target="_blank" style="color:red;">
-        ACCESS POINT: (50.4813643, 14.3957695)
-    </a>
-</p>
-
-    <p>klikni a vstup</p>
-</div>
+<h2>🐸 ROSNIČKA BARČA //</h2>
+<p id="weatherText">Barča načítá signál...</p>
+<button onclick="getWeather()">zeptat se Barči</button>
 
 <script>
-    function house() {
+
+// 🧠 JEDNOTNÉ DATUM (DD/MM/YYYY)
+const partyDate = "12/04/2026";
+
+// 🔄 převod pro API
+function parseDate(dateStr) {
+    const [day, month, year] = dateStr.split("/");
+    return `${year}-${month}-${day}`;
+}
+
+// 📅 zobraz datum na stránce
+document.getElementById("partyDateText").innerText = "datum: " + partyDate;
+
+
+// 🔊 ENTER
+function reveal() {
+    document.getElementById("secret").style.display = "block";
+    document.getElementById("audio").play();
+}
+
+// 🎮 GAME
+function house() {
     document.getElementById("gameOutput").innerText = "empty... but something moved";
 }
 
@@ -94,14 +122,13 @@ function forest() {
 }
 
 function radio() {
-    document.getElementById("gameOutput").innerText = "/// SIGNAL FOUND /// 12.4 ///";
+    document.getElementById("gameOutput").innerText = "/// SIGNAL FOUND /// " + partyDate + " ///";
 }
 
 function grill() {
     document.getElementById("gameOutput").innerText = "overheating...";
+    document.body.style.transition = "0.05s";
 
-    document.body.style.transition = "0.1s";
-    
     setTimeout(() => {
         document.body.style.background = "red";
         document.getElementById("gameOutput").innerText = "💥 BOOM 💥";
@@ -112,16 +139,76 @@ function grill() {
         document.getElementById("gameOutput").innerText = "silence...";
     }, 2000);
 }
-function reveal() {
-    document.getElementById("secret").style.display = "block";
+
+
+// 🐸 BARČA
+async function getWeather() {
+    const lat = 50.4813643;
+    const lon = 14.3957695;
+
+    const apiDate = parseDate(partyDate);
+
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,precipitation_sum&timezone=auto`;
+
+    const res = await fetch(url);
+    const data = await res.json();
+
+    const dates = data.daily.time;
+    const temps = data.daily.temperature_2m_max;
+    const rain = data.daily.precipitation_sum;
+
+    const index = dates.indexOf(apiDate);
+
+    if (index === -1) {
+        document.getElementById("weatherText").innerText = "Barča: nevidím tak daleko 👁";
+        return;
+    }
+
+    const temp = temps[index];
+    const rainAmount = rain[index];
+
+    let text = "";
+
+    if (rainAmount > 5) {
+        const hlasky = [
+            "Barča: bude chcát jak hovado 🌧️",
+            "Barča: déšť incoming, vem pláštěnku",
+            "Barča: mokrá párty, ale pořád párty 😈"
+        ];
+        text = hlasky[Math.floor(Math.random() * hlasky.length)];
+    } 
+    else if (temp > 25) {
+        const hlasky = [
+            "Barča: vedro jak prase, jdi ve spodkách 🩳",
+            "Barča: budeš se tavit 🔥",
+            "Barča: ideální na nahotu 😄"
+        ];
+        text = hlasky[Math.floor(Math.random() * hlasky.length)];
+    } 
+    else if (temp < 10) {
+        const hlasky = [
+            "Barča: klendra, vem si bundu 🧥",
+            "Barča: bude kosa, ale dá se to",
+            "Barča: zahřeje tě jen bass 🔊"
+        ];
+        text = hlasky[Math.floor(Math.random() * hlasky.length)];
+    } 
+    else {
+        const hlasky = [
+            "Barča: ideální rave počasí 🌲",
+            "Barča: tohle je ono",
+            "Barča: vesmír přeje akci 😈"
+        ];
+        text = hlasky[Math.floor(Math.random() * hlasky.length)];
+    }
+
+    document.getElementById("weatherText").innerText = text;
 }
+
+// auto load
+getWeather();
+
 </script>
 
 </body>
 </html>
-<audio autoplay loop>
-  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
-</audio>
-<marquee>NO RULES • NO SYSTEM • ONLY SOUND</marquee>
-<p>accessing network...</p>
-<p>decrypting signal...</p>

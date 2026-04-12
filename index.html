@@ -2,7 +2,15 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>UNKNOWN SIGNAL</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHATAPARTY</title>
+
+<!-- 🔥 PREVIEW PŘI SDÍLENÍ -->
+<meta property="og:title" content="CHATAPARTY">
+<meta property="og:description" content="vstup pouze pro vyvolené">
+<meta property="og:image" content="https://raw.githubusercontent.com/SistemMistake/Chataparty/main/cover.png">
+<meta property="og:url" content="https://sistemmistake.github.io/Chataparty">
+<meta name="theme-color" content="#000000">
 
 <style>
 body {
@@ -10,212 +18,160 @@ body {
     color: red;
     font-family: monospace;
     text-align: center;
+    margin: 0;
+    padding: 10px;
+    overflow-x: hidden;
 }
-
+.container {
+    max-width: 600px;
+    margin: auto;
+}
 h1 {
-    font-size: 50px;
+    font-size: clamp(28px, 6vw, 50px);
     animation: flicker 0.1s infinite;
 }
-
-@keyframes flicker {
-    0% {opacity: 1;}
-    50% {opacity: 0.2;}
-    100% {opacity: 1;}
+p {
+    font-size: clamp(14px, 3.5vw, 18px);
 }
-
 .glitch {
     color: lime;
-    font-size: 20px;
     animation: glitch 0.2s infinite;
 }
-
-@keyframes glitch {
-    0% {transform: translate(0px);}
-    25% {transform: translate(2px, -2px);}
-    50% {transform: translate(-2px, 2px);}
-    75% {transform: translate(2px, 2px);}
-    100% {transform: translate(0px);}
+button {
+    width: 100%;
+    max-width: 300px;
+    padding: 12px;
+    margin: 5px;
+    background: black;
+    color: lime;
+    border: 1px solid lime;
 }
+input, select {
+    width: 90%;
+    max-width: 300px;
+    padding: 10px;
+    margin: 5px;
+    background: black;
+    color: white;
+    border: 1px solid red;
+}
+hr { margin: 30px 0; }
+.hidden { display:none; }
 
-.hidden {
-    display: none;
+@keyframes flicker {
+    0%{opacity:1;}50%{opacity:0.2;}100%{opacity:1;}
+}
+@keyframes glitch {
+    0%{transform:translate(0);}
+    50%{transform:translate(2px,-2px);}
+    100%{transform:translate(0);}
 }
 </style>
 </head>
 
 <body>
+<div class="container">
 
 <audio id="audio" loop>
   <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_c8c8f1f6e3.mp3">
 </audio>
 
-<marquee>NO RULES • NO SYSTEM • ONLY SOUND</marquee>
-<p>accessing network...</p>
-<p>decrypting signal...</p>
+<marquee>ŽÁDNÁ PRAVIDLA • ŽÁDNÝ SYSTÉM • JEN SOUND</marquee>
 
-<h1>⚠ SIGNAL DETECTED ⚠</h1>
-
-<p class="glitch">you were not supposed to be here</p>
+<h1>⚠ SIGNAL DETEKOVÁN ⚠</h1>
+<p class="glitch">neměl bys tu být</p>
 
 <p id="partyDateText"></p>
-<p>lokace: classified</p>
-
-<button onclick="reveal()">ENTER</button>
+<button onclick="reveal()">VSTOUPIT</button>
 
 <div id="secret" class="hidden">
-    <p>🌲 koordináty aktivovány 🌲</p>
-    <p>
-        <a href="https://maps.google.com/?q=50.4813643,14.3957695" target="_blank" style="color:red;">
-            ACCESS POINT: (50.4813643, 14.3957695)
-        </a>
-    </p>
+<a href="https://maps.google.com/?q=50.4813643,14.3957695" target="_blank">
+(50.4813643, 14.3957695)
+</a>
 </div>
-
-<hr>
-
-<h2>🏚️ GHOST TOWN //</h2>
-
-<div>
-    <button onclick="house()">🏚️ HOUSE</button>
-    <button onclick="forest()">🌲 FOREST</button>
-    <button onclick="radio()">📻 RADIO</button>
-    <button onclick="grill()">🔥 GRILL</button>
-</div>
-
-<p id="gameOutput"></p>
 
 <hr>
 
 <h2>🐸 ROSNIČKA BARČA //</h2>
-<p id="weatherText">Barča načítá signál...</p>
-<button onclick="getWeather()">zeptat se Barči</button>
+<p id="weatherText">načítám...</p>
+
+<hr>
+
+<h2>📡 FORMULÁŘ //</h2>
+
+<form action="https://formspree.io/f/TVUJ_KOD" method="POST">
+
+<input type="text" name="real_name" placeholder="pravé jméno" required>
+<input type="text" name="nickname" placeholder="přezdívka" required>
+
+<select name="arrival">
+<option>jedu autem</option>
+<option>vyzvednout Štětí</option>
+<option>vyzvednout Hněvice</option>
+</select>
+
+<select name="sleep">
+<option>přespím</option>
+<option>jedu domů</option>
+</select>
+
+<select name="departure">
+<option>odjíždím sám</option>
+<option>odvoz Štětí</option>
+<option>odvoz Hněvice</option>
+</select>
+
+<input type="text" name="note" placeholder="poznámka">
+
+<button type="submit">ODESLAT</button>
+
+</form>
+
+<hr>
+
+<p>
+<a href="tel:+420725410785" style="color:lime;">
++420 725 410 785
+</a>
+</p>
+
+<p>volej 20 minut před příjezdem</p>
+<p>→ infolinka aktivní</p>
+
+</div>
 
 <script>
+const partyDate="12/04/2026";
 
-// 🧠 JEDNOTNÉ DATUM
-const partyDate = "25/04/2026";
-
-// 🔄 převod formátu
-function parseDate(dateStr) {
-    const [day, month, year] = dateStr.split("/");
-    return `${year}-${month}-${day}`;
+function parseDate(d){
+ const [day,month,year]=d.split("/");
+ return `${year}-${month}-${day}`;
 }
 
-// zobraz datum
-document.getElementById("partyDateText").innerText = "datum: " + partyDate;
+partyDateText.innerText="datum: "+partyDate;
 
-
-// 🔊 ENTER
-function reveal() {
-    document.getElementById("secret").style.display = "block";
-    document.getElementById("audio").play();
+function reveal(){
+ secret.style.display="block";
+ audio.play();
 }
 
-// 🎮 GAME
-function house() {
-    document.getElementById("gameOutput").innerText = "empty... but something moved";
+async function getWeather(){
+ const apiDate=parseDate(partyDate);
+
+ const res=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=50.48&longitude=14.39&daily=temperature_2m_max&timezone=auto`);
+ const data=await res.json();
+
+ const i=data.daily.time.indexOf(apiDate);
+
+ if(i===-1){
+ weatherText.innerText="Barča: nevidím tak daleko";
+ return;
+ }
+
+ weatherText.innerText="Barča: bude cca "+data.daily.temperature_2m_max[i]+"°C 😈";
 }
 
-function forest() {
-    document.getElementById("gameOutput").innerText = "you hear distant bass in the trees 🌲";
-}
-
-function radio() {
-    document.getElementById("gameOutput").innerText = "/// SIGNAL FOUND /// " + partyDate + " ///";
-}
-
-function grill() {
-    document.getElementById("gameOutput").innerText = "overheating...";
-    document.body.style.transition = "0.05s";
-
-    setTimeout(() => {
-        document.body.style.background = "red";
-        document.getElementById("gameOutput").innerText = "💥 BOOM 💥";
-    }, 1000);
-
-    setTimeout(() => {
-        document.body.style.background = "black";
-        document.getElementById("gameOutput").innerText = "silence...";
-    }, 2000);
-}
-
-
-// 🐸 BARČA PRO
-async function getWeather() {
-    const lat = 50.4813643;
-    const lon = 14.3957695;
-
-    const apiDate = parseDate(partyDate);
-
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,windspeed_10m_max,weathercode&timezone=auto`;
-
-    const res = await fetch(url);
-    const data = await res.json();
-
-    const dates = data.daily.time;
-    const tMax = data.daily.temperature_2m_max;
-    const tMin = data.daily.temperature_2m_min;
-    const rain = data.daily.precipitation_sum;
-    const wind = data.daily.windspeed_10m_max;
-    const code = data.daily.weathercode;
-
-    const index = dates.indexOf(apiDate);
-
-    if (index === -1) {
-        document.getElementById("weatherText").innerText = "Barča: signál nedosáhne tak daleko 👁";
-        return;
-    }
-
-    const tempMax = tMax[index];
-    const tempMin = tMin[index];
-    const rainAmount = rain[index];
-    const windSpeed = wind[index];
-    const weatherCode = code[index];
-
-    function getWeatherType(code) {
-        if (code === 0) return "jasno";
-        if (code <= 3) return "polojasno / zataženo";
-        if (code <= 48) return "mlha";
-        if (code <= 67) return "déšť";
-        if (code <= 77) return "sníh";
-        if (code <= 99) return "bouřka";
-        return "chaos";
-    }
-
-    const weatherType = getWeatherType(weatherCode);
-
-    let vibe = "";
-
-    if (rainAmount > 5) {
-        vibe = "bude to mokrý... ale to tě nezastaví";
-    } else if (tempMax > 25) {
-        vibe = "vzduch se bude vařit... stejně jako lidi";
-    } else if (tempMax < 10) {
-        vibe = "zima se ti dostane pod kůži";
-    } else if (windSpeed > 20) {
-        vibe = "vítr roznese zvuk daleko";
-    } else {
-        vibe = "podmínky jsou... ideální";
-    }
-
-    const text = `
-Barča hlásí:
-
-📅 ${partyDate}
-🌡 ${tempMin}°C → ${tempMax}°C
-🌧 srážky: ${rainAmount} mm
-🌬 vítr: ${windSpeed} km/h
-☁ stav: ${weatherType}
-
-${vibe} 😈
-`;
-
-    document.getElementById("weatherText").innerText = text;
-}
-
-// auto load
 getWeather();
-
 </script>
 
 </body>
